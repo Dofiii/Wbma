@@ -1,10 +1,21 @@
-import React from 'react';
-import {StyleSheet, SafeAreaView, Text, Platform} from 'react-native';
+import React, {useContext} from 'react';
+import {StyleSheet, SafeAreaView, Text, Platform, Button} from 'react-native';
+import {AuthContext} from '../contexts/AuthContext';
+import PropTypes from 'prop-types';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
+  const [isLoggedIn, setIsLoggedIn] = useContext(AuthContext);
+  console.log('profile', isLoggedIn);
+  const logout = async () => {
+    setIsLoggedIn(false);
+    await AsyncStorage.clear();
+    navigation.navigate('Login');
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Text>Profile</Text>
+      <Button title={'Logout'} onPress={logout} />
     </SafeAreaView>
   );
 };
@@ -18,5 +29,9 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? 25 : 0,
   },
 });
+
+Profile.propTypes = {
+  navigation: PropTypes.object,
+};
 
 export default Profile;
